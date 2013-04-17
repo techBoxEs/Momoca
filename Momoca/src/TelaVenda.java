@@ -3,6 +3,7 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.text.DecimalFormat;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -21,7 +22,6 @@ import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
 
 public class TelaVenda extends JFrame {
 
@@ -32,8 +32,9 @@ public class TelaVenda extends JFrame {
 	private JTextField tfValorUni;
 	private JTable tbLista = new JTable();
 	private JLabel lblFoto;
-	private DefaultTableModel model ;
+	private DefaultTableModel model;
 	private JTextPane tfDescricao;
+	private JScrollPane scrollPane;
 
 	/**
 	 * Launch the application.
@@ -103,8 +104,12 @@ public class TelaVenda extends JFrame {
 					tfQuantidade.selectAll();
 				} else if (e.getKeyCode() == 10) {
 					model = (DefaultTableModel) tbLista.getModel();
-model.addRow(new Object[]{1,tfDescricao.getText(),tfValorUni.getText(),tfQuantidade.getText(),tfTotal.getText()});
-atualizarNumeros();
+					model.addRow(new Object[] { 1, tfDescricao.getText(),
+							tfValorUni.getText(), tfQuantidade.getText(),
+							verificarTotal() });
+					atualizarNumeros();
+				}else if(e.getKeyCode()==40){
+				
 				}
 
 			}
@@ -150,20 +155,15 @@ atualizarNumeros();
 		tfValorUni.setEditable(false);
 		tfValorUni.setFont(new Font("Verdana", Font.PLAIN, 20));
 		tfValorUni.setHorizontalAlignment(SwingConstants.RIGHT);
-		tfValorUni.setText("5,99");
+		tfValorUni.setText("5.99");
 		tfValorUni.setColumns(10);
 
-		JScrollPane scrollPane = new JScrollPane();
+		scrollPane = new JScrollPane();
 
 		tbLista = new JTable();
 		tbLista.setEnabled(false);
-		tbLista.setModel(new DefaultTableModel(
-			new Object[][] {
-			},
-			new String[] {
-				"Item", "Descri\u00E7\u00E3o", "Valor", "Qn", "Total"
-			}
-		));
+		tbLista.setModel(new DefaultTableModel(new Object[][] {}, new String[] {
+				"Item", "Descri\u00E7\u00E3o", "Valor", "Qn", "Total" }));
 		tbLista.getColumnModel().getColumn(0).setPreferredWidth(56);
 		tbLista.getColumnModel().getColumn(1).setPreferredWidth(359);
 		tbLista.getColumnModel().getColumn(3).setPreferredWidth(45);
@@ -401,9 +401,20 @@ atualizarNumeros();
 			}
 		}
 	}
-	public void atualizarNumeros(){
-		for(int i=1; i<= tbLista.getRowCount();i++){
-			model.setValueAt(i, i-1, 0);
+
+	public void atualizarNumeros() {
+		for (int i = 1; i <= tbLista.getRowCount(); i++) {
+			model.setValueAt(i, i - 1, 0);
 		}
+
+	}
+
+	public String verificarTotal() {
+
+		DecimalFormat format = new DecimalFormat("#.##");
+		int quant = Integer.parseInt(tfQuantidade.getText());
+		double valor = Double.parseDouble(tfValorUni.getText());
+
+		return format.format(quant * valor);
 	}
 }
