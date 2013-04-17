@@ -1,6 +1,8 @@
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -19,17 +21,19 @@ import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.table.TableColumn;
 
 public class TelaVenda extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JTextField textField_3;
-	private JTable table;
+	private JTextField tfTotal;
+	private JTextField tfCodigo;
+	private JTextField tfQuantidade;
+	private JTextField tfValorUni;
+	private JTable tbLista = new JTable();
 	private JLabel lblFoto;
+	private DefaultTableModel model ;
+	private JTextPane tfDescricao;
 
 	/**
 	 * Launch the application.
@@ -40,6 +44,7 @@ public class TelaVenda extends JFrame {
 				try {
 					TelaVenda frame = new TelaVenda();
 					frame.setVisible(true);
+
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -51,9 +56,16 @@ public class TelaVenda extends JFrame {
 	 * Create the frame.
 	 */
 	public TelaVenda() {
+		addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				System.out.println("" + e.getKeyCode());
+			}
+		});
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 976, 636);
 		contentPane = new JPanel();
+
 		contentPane.setBackground(UIManager.getColor("CheckBox.light"));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -61,95 +73,101 @@ public class TelaVenda extends JFrame {
 		JLabel lblTotal = new JLabel("Total R$");
 		lblTotal.setFont(new Font("Verdana", Font.PLAIN, 35));
 
-		textField = new JTextField();
-		textField.setHorizontalAlignment(SwingConstants.RIGHT);
-		textField.setEditable(false);
-		textField.setFont(new Font("Verdana", Font.PLAIN, 35));
-		textField.setText("135,54");
-		textField.setColumns(10);
+		tfTotal = new JTextField();
+		tfTotal.setHorizontalAlignment(SwingConstants.RIGHT);
+		tfTotal.setEditable(false);
+		tfTotal.setFont(new Font("Verdana", Font.PLAIN, 35));
+		tfTotal.setText("135,54");
+		tfTotal.setColumns(10);
 
 		JLabel lblProduto = new JLabel("Valor Unit\u00E1rio R$");
 		lblProduto.setFont(new Font("Verdana", Font.PLAIN, 20));
 
-		JTextPane txtpnFarinhaDeManioca = new JTextPane();
-		txtpnFarinhaDeManioca.setEditable(false);
-		txtpnFarinhaDeManioca.setText("FARINHA DE MANDIOCA - GRANFINO - 500GR");
-		txtpnFarinhaDeManioca.setFont(new Font("Verdana", Font.PLAIN, 20));
+		tfDescricao = new JTextPane();
+		tfDescricao.setEditable(false);
+		tfDescricao.setText("FARINHA DE MANDIOCA - GRANFINO - 500GR");
+		tfDescricao.setFont(new Font("Verdana", Font.PLAIN, 20));
 
 		JLabel lblPreoUnitrio = new JLabel("Qnt");
 		lblPreoUnitrio.setHorizontalAlignment(SwingConstants.LEFT);
 		lblPreoUnitrio.setFont(new Font("Verdana", Font.PLAIN, 20));
 
-		textField_1 = new JTextField();
-		textField_1.setEditable(false);
-		textField_1.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		textField_1.setText("0123456789123");
-		textField_1.setHorizontalAlignment(SwingConstants.RIGHT);
-		textField_1.setColumns(10);
+		tfCodigo = new JTextField();
+		tfCodigo.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				System.out.println(e.getKeyCode());
+				if (e.getKeyCode() == 113) {
+					tfQuantidade.setEditable(true);
+					tfQuantidade.requestFocus();
+					tfQuantidade.selectAll();
+				} else if (e.getKeyCode() == 10) {
+					model = (DefaultTableModel) tbLista.getModel();
+model.addRow(new Object[]{1,tfDescricao.getText(),tfValorUni.getText(),tfQuantidade.getText(),tfTotal.getText()});
+atualizarNumeros();
+				}
+
+			}
+		});
+		tfCodigo.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		tfCodigo.setText("0123456789123");
+		tfCodigo.setHorizontalAlignment(SwingConstants.RIGHT);
+		tfCodigo.setColumns(10);
 
 		JLabel lblQuantidade = new JLabel("C\u00F3digo de Barras");
 		lblQuantidade.setFont(new Font("Verdana", Font.PLAIN, 20));
 
-		textField_2 = new JTextField();
-		textField_2.setEditable(false);
-		textField_2.setText("5");
-		textField_2.setHorizontalAlignment(SwingConstants.RIGHT);
-		textField_2.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		textField_2.setColumns(10);
+		tfQuantidade = new JTextField();
+		tfQuantidade.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == 10) {
+					tfQuantidade.setEditable(false);
+					tfCodigo.requestFocus();
+
+				}
+			}
+
+			@Override
+			public void keyTyped(KeyEvent e) {
+				String caracteres = "0123456789";
+				if (!caracteres.contains(e.getKeyChar() + ""))
+					e.consume();
+			}
+		});
+
+		tfQuantidade.setEditable(false);
+		tfQuantidade.setText("5");
+		tfQuantidade.setHorizontalAlignment(SwingConstants.RIGHT);
+		tfQuantidade.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		tfQuantidade.setColumns(10);
 
 		lblFoto = new JLabel("");
 		lblFoto.setIcon(new ImageIcon("Imagens/pao.jpg"));
 		lblFoto.setOpaque(true);
-		
 
-		textField_3 = new JTextField();
-		textField_3.setEditable(false);
-		textField_3.setFont(new Font("Verdana", Font.PLAIN, 20));
-		textField_3.setHorizontalAlignment(SwingConstants.RIGHT);
-		textField_3.setText("5,99");
-		textField_3.setColumns(10);
+		tfValorUni = new JTextField();
+		tfValorUni.setEditable(false);
+		tfValorUni.setFont(new Font("Verdana", Font.PLAIN, 20));
+		tfValorUni.setHorizontalAlignment(SwingConstants.RIGHT);
+		tfValorUni.setText("5,99");
+		tfValorUni.setColumns(10);
 
 		JScrollPane scrollPane = new JScrollPane();
 
-		table = new JTable();
-		table.setModel(new DefaultTableModel(
+		tbLista = new JTable();
+		tbLista.setEnabled(false);
+		tbLista.setModel(new DefaultTableModel(
 			new Object[][] {
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
 			},
 			new String[] {
-				"C\u00F3digo", "Descri\u00E7\u00E3o", "Valor", "Qn", "Total"
+				"Item", "Descri\u00E7\u00E3o", "Valor", "Qn", "Total"
 			}
 		));
-		table.getColumnModel().getColumn(0).setPreferredWidth(100);
-		table.getColumnModel().getColumn(1).setPreferredWidth(359);
-		table.getColumnModel().getColumn(3).setPreferredWidth(45);
-		scrollPane.setViewportView(table);
+		tbLista.getColumnModel().getColumn(0).setPreferredWidth(56);
+		tbLista.getColumnModel().getColumn(1).setPreferredWidth(359);
+		tbLista.getColumnModel().getColumn(3).setPreferredWidth(45);
+		scrollPane.setViewportView(tbLista);
 
 		JPanel panel = new JPanel();
 		panel.setBorder(new TitledBorder(null, "Op\u00E7\u00F5es",
@@ -158,76 +176,214 @@ public class TelaVenda extends JFrame {
 		panel.setBackground(UIManager.getColor("CheckBox.light"));
 		panel.setLayout(null);
 
-		JLabel lblNewLabel_1 = new JLabel("F2 Inserir C\u00F3digo de Barras");
-		lblNewLabel_1.setForeground(new Color(0, 0, 0));
-		lblNewLabel_1.setFont(new Font("Verdana", Font.PLAIN, 12));
-		lblNewLabel_1.setBounds(10, 24, 191, 20);
-		panel.add(lblNewLabel_1);
+		JLabel lblF2 = new JLabel("F2 Mudar a quantidade");
+		lblF2.setForeground(new Color(0, 0, 0));
+		lblF2.setFont(new Font("Verdana", Font.PLAIN, 12));
+		lblF2.setBounds(10, 24, 158, 20);
+		panel.add(lblF2);
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
-		gl_contentPane.setHorizontalGroup(
-			gl_contentPane.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_contentPane.createSequentialGroup()
-					.addGap(5)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addComponent(lblTotal, GroupLayout.PREFERRED_SIZE, 161, GroupLayout.PREFERRED_SIZE)
-							.addGap(44)
-							.addComponent(textField, GroupLayout.PREFERRED_SIZE, 197, GroupLayout.PREFERRED_SIZE))
-						.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 554, Short.MAX_VALUE))
-					.addGap(18)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING, false)
-						.addComponent(lblFoto, GroupLayout.PREFERRED_SIZE, 363, GroupLayout.PREFERRED_SIZE)
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addComponent(lblQuantidade, GroupLayout.PREFERRED_SIZE, 233, GroupLayout.PREFERRED_SIZE)
-							.addGap(53)
-							.addComponent(lblPreoUnitrio, GroupLayout.PREFERRED_SIZE, 77, GroupLayout.PREFERRED_SIZE))
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addComponent(textField_1, GroupLayout.PREFERRED_SIZE, 207, GroupLayout.PREFERRED_SIZE)
-							.addGap(79)
-							.addComponent(textField_2, GroupLayout.PREFERRED_SIZE, 77, GroupLayout.PREFERRED_SIZE))
-						.addComponent(txtpnFarinhaDeManioca, GroupLayout.PREFERRED_SIZE, 363, GroupLayout.PREFERRED_SIZE)
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addComponent(lblProduto, GroupLayout.PREFERRED_SIZE, 180, GroupLayout.PREFERRED_SIZE)
-							.addGap(61)
-							.addComponent(textField_3, GroupLayout.PREFERRED_SIZE, 122, GroupLayout.PREFERRED_SIZE))
-						.addComponent(panel, GroupLayout.PREFERRED_SIZE, 363, GroupLayout.PREFERRED_SIZE))
-					.addContainerGap())
-		);
-		gl_contentPane.setVerticalGroup(
-			gl_contentPane.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_contentPane.createSequentialGroup()
-					.addGap(20)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGap(0, 0, Short.MAX_VALUE)
-							.addComponent(lblFoto, GroupLayout.PREFERRED_SIZE, 210, GroupLayout.PREFERRED_SIZE)
-							.addGap(11)
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addComponent(lblQuantidade, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
-								.addComponent(lblPreoUnitrio, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE))
-							.addGap(5)
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addComponent(textField_2, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
-								.addComponent(textField_1, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE))
-							.addGap(11)
-							.addComponent(txtpnFarinhaDeManioca, GroupLayout.PREFERRED_SIZE, 74, GroupLayout.PREFERRED_SIZE)
-							.addGap(11)
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addComponent(lblProduto, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
-								.addGroup(gl_contentPane.createSequentialGroup()
-									.addGap(4)
-									.addComponent(textField_3, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)))
-							.addGap(8)
-							.addComponent(panel, GroupLayout.PREFERRED_SIZE, 135, GroupLayout.PREFERRED_SIZE))
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGap(69)
-							.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 422, Short.MAX_VALUE)
-							.addGap(11)
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-								.addComponent(textField, GroupLayout.PREFERRED_SIZE, 58, GroupLayout.PREFERRED_SIZE)
-								.addComponent(lblTotal, GroupLayout.PREFERRED_SIZE, 58, GroupLayout.PREFERRED_SIZE))))
-					.addGap(8))
-		);
+		gl_contentPane
+				.setHorizontalGroup(gl_contentPane
+						.createParallelGroup(Alignment.LEADING)
+						.addGroup(
+								gl_contentPane
+										.createSequentialGroup()
+										.addGap(5)
+										.addGroup(
+												gl_contentPane
+														.createParallelGroup(
+																Alignment.TRAILING)
+														.addGroup(
+																gl_contentPane
+																		.createSequentialGroup()
+																		.addComponent(
+																				lblTotal,
+																				GroupLayout.PREFERRED_SIZE,
+																				161,
+																				GroupLayout.PREFERRED_SIZE)
+																		.addGap(44)
+																		.addComponent(
+																				tfTotal,
+																				GroupLayout.PREFERRED_SIZE,
+																				197,
+																				GroupLayout.PREFERRED_SIZE))
+														.addComponent(
+																scrollPane,
+																GroupLayout.DEFAULT_SIZE,
+																554,
+																Short.MAX_VALUE))
+										.addGap(18)
+										.addGroup(
+												gl_contentPane
+														.createParallelGroup(
+																Alignment.LEADING,
+																false)
+														.addComponent(
+																lblFoto,
+																GroupLayout.PREFERRED_SIZE,
+																363,
+																GroupLayout.PREFERRED_SIZE)
+														.addGroup(
+																gl_contentPane
+																		.createSequentialGroup()
+																		.addComponent(
+																				lblQuantidade,
+																				GroupLayout.PREFERRED_SIZE,
+																				233,
+																				GroupLayout.PREFERRED_SIZE)
+																		.addGap(53)
+																		.addComponent(
+																				lblPreoUnitrio,
+																				GroupLayout.PREFERRED_SIZE,
+																				77,
+																				GroupLayout.PREFERRED_SIZE))
+														.addGroup(
+																gl_contentPane
+																		.createSequentialGroup()
+																		.addComponent(
+																				tfCodigo,
+																				GroupLayout.PREFERRED_SIZE,
+																				207,
+																				GroupLayout.PREFERRED_SIZE)
+																		.addGap(79)
+																		.addComponent(
+																				tfQuantidade,
+																				GroupLayout.PREFERRED_SIZE,
+																				77,
+																				GroupLayout.PREFERRED_SIZE))
+														.addComponent(
+																tfDescricao,
+																GroupLayout.PREFERRED_SIZE,
+																363,
+																GroupLayout.PREFERRED_SIZE)
+														.addGroup(
+																gl_contentPane
+																		.createSequentialGroup()
+																		.addComponent(
+																				lblProduto,
+																				GroupLayout.PREFERRED_SIZE,
+																				180,
+																				GroupLayout.PREFERRED_SIZE)
+																		.addGap(61)
+																		.addComponent(
+																				tfValorUni,
+																				GroupLayout.PREFERRED_SIZE,
+																				122,
+																				GroupLayout.PREFERRED_SIZE))
+														.addComponent(
+																panel,
+																GroupLayout.PREFERRED_SIZE,
+																363,
+																GroupLayout.PREFERRED_SIZE))
+										.addContainerGap()));
+		gl_contentPane
+				.setVerticalGroup(gl_contentPane
+						.createParallelGroup(Alignment.LEADING)
+						.addGroup(
+								gl_contentPane
+										.createSequentialGroup()
+										.addGap(20)
+										.addGroup(
+												gl_contentPane
+														.createParallelGroup(
+																Alignment.TRAILING)
+														.addGroup(
+																gl_contentPane
+																		.createSequentialGroup()
+																		.addGap(0,
+																				0,
+																				Short.MAX_VALUE)
+																		.addComponent(
+																				lblFoto,
+																				GroupLayout.PREFERRED_SIZE,
+																				210,
+																				GroupLayout.PREFERRED_SIZE)
+																		.addGap(11)
+																		.addGroup(
+																				gl_contentPane
+																						.createParallelGroup(
+																								Alignment.LEADING)
+																						.addComponent(
+																								lblQuantidade,
+																								GroupLayout.PREFERRED_SIZE,
+																								31,
+																								GroupLayout.PREFERRED_SIZE)
+																						.addComponent(
+																								lblPreoUnitrio,
+																								GroupLayout.PREFERRED_SIZE,
+																								31,
+																								GroupLayout.PREFERRED_SIZE))
+																		.addGap(5)
+																		.addGroup(
+																				gl_contentPane
+																						.createParallelGroup(
+																								Alignment.LEADING)
+																						.addComponent(
+																								tfQuantidade,
+																								GroupLayout.PREFERRED_SIZE,
+																								30,
+																								GroupLayout.PREFERRED_SIZE)
+																						.addComponent(
+																								tfCodigo,
+																								GroupLayout.PREFERRED_SIZE,
+																								30,
+																								GroupLayout.PREFERRED_SIZE))
+																		.addGap(11)
+																		.addComponent(
+																				tfDescricao,
+																				GroupLayout.PREFERRED_SIZE,
+																				74,
+																				GroupLayout.PREFERRED_SIZE)
+																		.addGap(11)
+																		.addGroup(
+																				gl_contentPane
+																						.createParallelGroup(
+																								Alignment.LEADING)
+																						.addComponent(
+																								lblProduto,
+																								GroupLayout.PREFERRED_SIZE,
+																								31,
+																								GroupLayout.PREFERRED_SIZE)
+																						.addGroup(
+																								gl_contentPane
+																										.createSequentialGroup()
+																										.addGap(4)
+																										.addComponent(
+																												tfValorUni,
+																												GroupLayout.PREFERRED_SIZE,
+																												30,
+																												GroupLayout.PREFERRED_SIZE)))
+																		.addGap(8)
+																		.addComponent(
+																				panel,
+																				GroupLayout.PREFERRED_SIZE,
+																				135,
+																				GroupLayout.PREFERRED_SIZE))
+														.addGroup(
+																gl_contentPane
+																		.createSequentialGroup()
+																		.addGap(69)
+																		.addComponent(
+																				scrollPane,
+																				GroupLayout.DEFAULT_SIZE,
+																				422,
+																				Short.MAX_VALUE)
+																		.addGap(11)
+																		.addGroup(
+																				gl_contentPane
+																						.createParallelGroup(
+																								Alignment.BASELINE)
+																						.addComponent(
+																								tfTotal,
+																								GroupLayout.PREFERRED_SIZE,
+																								58,
+																								GroupLayout.PREFERRED_SIZE)
+																						.addComponent(
+																								lblTotal,
+																								GroupLayout.PREFERRED_SIZE,
+																								58,
+																								GroupLayout.PREFERRED_SIZE))))
+										.addGap(8)));
 		contentPane.setLayout(gl_contentPane);
 
 		try {
@@ -243,6 +399,11 @@ public class TelaVenda extends JFrame {
 			} catch (Exception erro) {
 				JOptionPane.showMessageDialog(null, "Erro ao mudat look");
 			}
+		}
+	}
+	public void atualizarNumeros(){
+		for(int i=1; i<= tbLista.getRowCount();i++){
+			model.setValueAt(i, i-1, 0);
 		}
 	}
 }
