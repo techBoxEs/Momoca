@@ -22,6 +22,7 @@ import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.JMenuBar;
 
 public class TelaVenda extends JFrame {
 
@@ -65,6 +66,9 @@ public class TelaVenda extends JFrame {
 		});
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 976, 636);
+		
+		JMenuBar menuBar = new JMenuBar();
+		setJMenuBar(menuBar);
 		contentPane = new JPanel();
 
 		contentPane.setBackground(UIManager.getColor("CheckBox.light"));
@@ -181,209 +185,74 @@ public class TelaVenda extends JFrame {
 		lblF2.setFont(new Font("Verdana", Font.PLAIN, 12));
 		lblF2.setBounds(10, 24, 158, 20);
 		panel.add(lblF2);
+		
+		JLabel label = new JLabel("");
+		label.setIcon(new ImageIcon("Imagens/logoTelaVenda.png"));
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
-		gl_contentPane
-				.setHorizontalGroup(gl_contentPane
-						.createParallelGroup(Alignment.LEADING)
-						.addGroup(
-								gl_contentPane
-										.createSequentialGroup()
-										.addGap(5)
-										.addGroup(
-												gl_contentPane
-														.createParallelGroup(
-																Alignment.TRAILING)
-														.addGroup(
-																gl_contentPane
-																		.createSequentialGroup()
-																		.addComponent(
-																				lblTotal,
-																				GroupLayout.PREFERRED_SIZE,
-																				161,
-																				GroupLayout.PREFERRED_SIZE)
-																		.addGap(44)
-																		.addComponent(
-																				tfTotal,
-																				GroupLayout.PREFERRED_SIZE,
-																				197,
-																				GroupLayout.PREFERRED_SIZE))
-														.addComponent(
-																scrollPane,
-																GroupLayout.DEFAULT_SIZE,
-																554,
-																Short.MAX_VALUE))
-										.addGap(18)
-										.addGroup(
-												gl_contentPane
-														.createParallelGroup(
-																Alignment.LEADING,
-																false)
-														.addComponent(
-																lblFoto,
-																GroupLayout.PREFERRED_SIZE,
-																363,
-																GroupLayout.PREFERRED_SIZE)
-														.addGroup(
-																gl_contentPane
-																		.createSequentialGroup()
-																		.addComponent(
-																				lblQuantidade,
-																				GroupLayout.PREFERRED_SIZE,
-																				233,
-																				GroupLayout.PREFERRED_SIZE)
-																		.addGap(53)
-																		.addComponent(
-																				lblPreoUnitrio,
-																				GroupLayout.PREFERRED_SIZE,
-																				77,
-																				GroupLayout.PREFERRED_SIZE))
-														.addGroup(
-																gl_contentPane
-																		.createSequentialGroup()
-																		.addComponent(
-																				tfCodigo,
-																				GroupLayout.PREFERRED_SIZE,
-																				207,
-																				GroupLayout.PREFERRED_SIZE)
-																		.addGap(79)
-																		.addComponent(
-																				tfQuantidade,
-																				GroupLayout.PREFERRED_SIZE,
-																				77,
-																				GroupLayout.PREFERRED_SIZE))
-														.addComponent(
-																tfDescricao,
-																GroupLayout.PREFERRED_SIZE,
-																363,
-																GroupLayout.PREFERRED_SIZE)
-														.addGroup(
-																gl_contentPane
-																		.createSequentialGroup()
-																		.addComponent(
-																				lblProduto,
-																				GroupLayout.PREFERRED_SIZE,
-																				180,
-																				GroupLayout.PREFERRED_SIZE)
-																		.addGap(61)
-																		.addComponent(
-																				tfValorUni,
-																				GroupLayout.PREFERRED_SIZE,
-																				122,
-																				GroupLayout.PREFERRED_SIZE))
-														.addComponent(
-																panel,
-																GroupLayout.PREFERRED_SIZE,
-																363,
-																GroupLayout.PREFERRED_SIZE))
-										.addContainerGap()));
-		gl_contentPane
-				.setVerticalGroup(gl_contentPane
-						.createParallelGroup(Alignment.LEADING)
-						.addGroup(
-								gl_contentPane
-										.createSequentialGroup()
-										.addGap(20)
-										.addGroup(
-												gl_contentPane
-														.createParallelGroup(
-																Alignment.TRAILING)
-														.addGroup(
-																gl_contentPane
-																		.createSequentialGroup()
-																		.addGap(0,
-																				0,
-																				Short.MAX_VALUE)
-																		.addComponent(
-																				lblFoto,
-																				GroupLayout.PREFERRED_SIZE,
-																				210,
-																				GroupLayout.PREFERRED_SIZE)
-																		.addGap(11)
-																		.addGroup(
-																				gl_contentPane
-																						.createParallelGroup(
-																								Alignment.LEADING)
-																						.addComponent(
-																								lblQuantidade,
-																								GroupLayout.PREFERRED_SIZE,
-																								31,
-																								GroupLayout.PREFERRED_SIZE)
-																						.addComponent(
-																								lblPreoUnitrio,
-																								GroupLayout.PREFERRED_SIZE,
-																								31,
-																								GroupLayout.PREFERRED_SIZE))
-																		.addGap(5)
-																		.addGroup(
-																				gl_contentPane
-																						.createParallelGroup(
-																								Alignment.LEADING)
-																						.addComponent(
-																								tfQuantidade,
-																								GroupLayout.PREFERRED_SIZE,
-																								30,
-																								GroupLayout.PREFERRED_SIZE)
-																						.addComponent(
-																								tfCodigo,
-																								GroupLayout.PREFERRED_SIZE,
-																								30,
-																								GroupLayout.PREFERRED_SIZE))
-																		.addGap(11)
-																		.addComponent(
-																				tfDescricao,
-																				GroupLayout.PREFERRED_SIZE,
-																				74,
-																				GroupLayout.PREFERRED_SIZE)
-																		.addGap(11)
-																		.addGroup(
-																				gl_contentPane
-																						.createParallelGroup(
-																								Alignment.LEADING)
-																						.addComponent(
-																								lblProduto,
-																								GroupLayout.PREFERRED_SIZE,
-																								31,
-																								GroupLayout.PREFERRED_SIZE)
-																						.addGroup(
-																								gl_contentPane
-																										.createSequentialGroup()
-																										.addGap(4)
-																										.addComponent(
-																												tfValorUni,
-																												GroupLayout.PREFERRED_SIZE,
-																												30,
-																												GroupLayout.PREFERRED_SIZE)))
-																		.addGap(8)
-																		.addComponent(
-																				panel,
-																				GroupLayout.PREFERRED_SIZE,
-																				135,
-																				GroupLayout.PREFERRED_SIZE))
-														.addGroup(
-																gl_contentPane
-																		.createSequentialGroup()
-																		.addGap(69)
-																		.addComponent(
-																				scrollPane,
-																				GroupLayout.DEFAULT_SIZE,
-																				422,
-																				Short.MAX_VALUE)
-																		.addGap(11)
-																		.addGroup(
-																				gl_contentPane
-																						.createParallelGroup(
-																								Alignment.BASELINE)
-																						.addComponent(
-																								tfTotal,
-																								GroupLayout.PREFERRED_SIZE,
-																								58,
-																								GroupLayout.PREFERRED_SIZE)
-																						.addComponent(
-																								lblTotal,
-																								GroupLayout.PREFERRED_SIZE,
-																								58,
-																								GroupLayout.PREFERRED_SIZE))))
-										.addGap(8)));
+		gl_contentPane.setHorizontalGroup(
+			gl_contentPane.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addGap(5)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addComponent(label, GroupLayout.PREFERRED_SIZE, 460, GroupLayout.PREFERRED_SIZE)
+						.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 554, Short.MAX_VALUE)
+						.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
+							.addGap(152)
+							.addComponent(lblTotal, GroupLayout.PREFERRED_SIZE, 161, GroupLayout.PREFERRED_SIZE)
+							.addGap(44)
+							.addComponent(tfTotal, GroupLayout.PREFERRED_SIZE, 197, GroupLayout.PREFERRED_SIZE)))
+					.addGap(18)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblFoto, GroupLayout.PREFERRED_SIZE, 363, GroupLayout.PREFERRED_SIZE)
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addComponent(lblQuantidade, GroupLayout.PREFERRED_SIZE, 233, GroupLayout.PREFERRED_SIZE)
+							.addGap(53)
+							.addComponent(lblPreoUnitrio, GroupLayout.PREFERRED_SIZE, 77, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addComponent(tfCodigo, GroupLayout.PREFERRED_SIZE, 207, GroupLayout.PREFERRED_SIZE)
+							.addGap(79)
+							.addComponent(tfQuantidade, GroupLayout.PREFERRED_SIZE, 77, GroupLayout.PREFERRED_SIZE))
+						.addComponent(tfDescricao, GroupLayout.PREFERRED_SIZE, 363, GroupLayout.PREFERRED_SIZE)
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addComponent(lblProduto, GroupLayout.PREFERRED_SIZE, 180, GroupLayout.PREFERRED_SIZE)
+							.addGap(61)
+							.addComponent(tfValorUni, GroupLayout.PREFERRED_SIZE, 122, GroupLayout.PREFERRED_SIZE))
+						.addComponent(panel, GroupLayout.PREFERRED_SIZE, 363, GroupLayout.PREFERRED_SIZE))
+					.addGap(10))
+		);
+		gl_contentPane.setVerticalGroup(
+			gl_contentPane.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addGap(6)
+					.addComponent(label, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
+					.addGap(3)
+					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 422, Short.MAX_VALUE)
+					.addGap(11)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblTotal, GroupLayout.PREFERRED_SIZE, 58, GroupLayout.PREFERRED_SIZE)
+						.addComponent(tfTotal, GroupLayout.PREFERRED_SIZE, 58, GroupLayout.PREFERRED_SIZE)))
+				.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
+					.addGap(20)
+					.addComponent(lblFoto, GroupLayout.PREFERRED_SIZE, 210, GroupLayout.PREFERRED_SIZE)
+					.addGap(11)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblQuantidade, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblPreoUnitrio, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE))
+					.addGap(5)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addComponent(tfCodigo, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
+						.addComponent(tfQuantidade, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE))
+					.addGap(11)
+					.addComponent(tfDescricao, GroupLayout.PREFERRED_SIZE, 74, GroupLayout.PREFERRED_SIZE)
+					.addGap(11)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblProduto, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addGap(4)
+							.addComponent(tfValorUni, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)))
+					.addGap(8)
+					.addComponent(panel, GroupLayout.PREFERRED_SIZE, 135, GroupLayout.PREFERRED_SIZE))
+		);
 		contentPane.setLayout(gl_contentPane);
 
 		try {
