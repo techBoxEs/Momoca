@@ -41,6 +41,18 @@ public class TelaCadastroUsuario extends JFrame {
 		JLabel lblNome = new JLabel("Nome:");
 		lblNome.setBounds(10, 55, 46, 14);
 		contentPane.add(lblNome);
+		
+		JLabel lblCargo = new JLabel("Cargo:");
+		lblCargo.setBounds(10, 80, 46, 14);
+		contentPane.add(lblCargo);
+		
+		JLabel lblSenha = new JLabel("Senha:");
+		lblSenha.setBounds(10, 118, 46, 14);
+		contentPane.add(lblSenha);
+		
+		JLabel lblConfirmarSenha = new JLabel("Confirmar senha:");
+		lblConfirmarSenha.setBounds(10, 143, 83, 14);
+		contentPane.add(lblConfirmarSenha);
 	}
 
 }
