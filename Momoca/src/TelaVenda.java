@@ -488,9 +488,9 @@ public class TelaVenda extends JFrame {
 
 		}
 		tfTotal.setText(String.format("%.2f", total));
-		//total = Math.round(total*100)/100;
-		
-		//tfTotal.setText((total + "").replace('.', ','));
+		// total = Math.round(total*100)/100;
+
+		// tfTotal.setText((total + "").replace('.', ','));
 	}
 
 	public void atualizarCampos() {
