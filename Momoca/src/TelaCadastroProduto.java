@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.sql.SQLException;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
@@ -21,10 +22,13 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
+import ultilitarios.Conexao;
+
 public class TelaCadastroProduto extends JFrame {
 
+	private Conexao conexao;
 	private JPanel contentPane;
-	private JTextField tfNome;
+	private JTextField tfDescricao;
 	private JTextField tfQuantEstoque;
 	private Imagem imagem = new Imagem();
 	JLabel lblFoto;
@@ -54,6 +58,13 @@ public class TelaCadastroProduto extends JFrame {
 	 * Create the frame.
 	 */
 	public TelaCadastroProduto() {
+
+		conexao = new Conexao();
+		conexao.conecta();
+		conexao.executarSQL("select * from categoria");
+		conexao.executarSQL("select * from produto");
+		
+
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 786, 393);
 		contentPane = new JPanel();
@@ -80,14 +91,53 @@ public class TelaCadastroProduto extends JFrame {
 		lblPreco.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		lblPreco.setBounds(10, 266, 46, 14);
 		contentPane.add(lblPreco);
+		
+		tfCod = new JTextField();
+		tfCod.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent event) {
+				if (event.getKeyCode() == 10 && tfCod.getText().length() > 0) {
+					tfDescricao.setEditable(true);
+					tfQuantEstoque.setEditable(true);
+					cbCategoria.setEnabled(true);
+					ftfPreco.setEditable(true);
+					btnAdicionarFoto.setEnabled(true);
+					btnCadastrar.setEnabled(true);
 
-		tfNome = new JTextField();
-		tfNome.setEditable(false);
-		tfNome.setBounds(150, 144, 209, 30);
-		contentPane.add(tfNome);
-		tfNome.setColumns(10);
+				}
+			}
+		});
+		tfCod.setBounds(150, 100, 209, 30);
+		contentPane.add(tfCod);
+		tfCod.setColumns(10);
+
+		tfDescricao = new JTextField();
+		tfDescricao.setEditable(false);
+		tfDescricao.setBounds(150, 144, 209, 30);
+		contentPane.add(tfDescricao);
+		tfDescricao.setColumns(10);
 
 		cbCategoria = new JComboBox();
+		cbCategoria.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (cbCategoria.getSelectedIndex() == 0) {
+					String novaCategoria = JOptionPane
+							.showInputDialog("Digite a nova categoria: ");
+					try {
+						conexao.statement
+								.executeUpdate("insert into categoria(nome) values('"
+										+ novaCategoria + "')");
+						
+						attCategoria();
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+				}
+
+			}
+		});
 		cbCategoria.setEnabled(false);
 		cbCategoria.setEditable(true);
 		cbCategoria.setModel(new DefaultComboBoxModel(
@@ -95,6 +145,8 @@ public class TelaCadastroProduto extends JFrame {
 		cbCategoria.setBounds(150, 184, 167, 30);
 		contentPane.add(cbCategoria);
 
+		attCategoria();
+		
 		tfQuantEstoque = new JTextField();
 		tfQuantEstoque.setEditable(false);
 		tfQuantEstoque.setBounds(150, 224, 62, 30);
@@ -102,41 +154,49 @@ public class TelaCadastroProduto extends JFrame {
 		tfQuantEstoque.setColumns(10);
 
 		JLabel lblLogo = new JLabel("");
-		lblLogo.setIcon(new ImageIcon(
-				"C:\\Users\\aluno\\Desktop\\logoLogin.png"));
+		lblLogo.setIcon(new ImageIcon("Imagens/logoLogin.png"));
 		lblLogo.setBounds(0, 0, 284, 89);
 		contentPane.add(lblLogo);
 
-		
 		ftfPreco = new JFormattedTextField();
 		ftfPreco.setEditable(false);
 		ftfPreco.setBounds(150, 260, 62, 30);
 		contentPane.add(ftfPreco);
 
 		JButton btnCancelar = new JButton("Cancelar");
-		btnCancelar.setIcon(new ImageIcon(
-				"C:\\Users\\aluno\\Desktop\\cancelar.png"));
+		btnCancelar.setIcon(new ImageIcon("Imagens/cancelar.png"));
 		btnCancelar.setBounds(10, 307, 133, 30);
 		contentPane.add(btnCancelar);
 
 		btnCadastrar = new JButton("Cadastrar");
+		btnCadastrar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					//System.out.println("insert into produto values(" +	"'"+tfCod.getText()+",'"+tfDescricao.getText()+"',"+getCodCategoria(cbCategoria.getSelectedItem().toString())+",'"+tfQuantEstoque.getText()+"','"+ftfPreco.getText()+"')");
+					conexao.statement.executeUpdate("insert into produto values(" +
+							"'"+tfCod.getText()+"','"+tfDescricao.getText()+"',"+getCodCategoria(cbCategoria.getSelectedItem().toString())+","+tfQuantEstoque.getText()+","+ftfPreco.getText()+")");
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				//descricao,categoria,estoque,preco
+			}
+		});
 		btnCadastrar.setEnabled(false);
-		btnCadastrar.setIcon(new ImageIcon(
-				"C:\\Users\\aluno\\Desktop\\btn-confirmar.png"));
+		btnCadastrar.setIcon(new ImageIcon("Imagens/btn-confirmar.png"));
 		btnCadastrar.setBounds(150, 307, 133, 30);
 		contentPane.add(btnCadastrar);
 
 		btnAdicionarFoto = new JButton("Adicionar foto");
 		btnAdicionarFoto.setEnabled(false);
-		btnAdicionarFoto.setIcon(new ImageIcon("C:\\Users\\aluno\\Desktop\\btnAdd.png"));
+		btnAdicionarFoto.setIcon(new ImageIcon("Imagens/btnAdd.png"));
 		btnAdicionarFoto.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				JFileChooser fileInterface = new JFileChooser();
 				if (fileInterface.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 					String caminho = fileInterface.getSelectedFile()
 							.getAbsolutePath();
-					imagem.addImagem(tfCod.getText()
-							, caminho);
+					imagem.addImagem(tfCod.getText(), caminho);
 					lblFoto.setIcon(imagem.getImagem(tfCod.getText()));
 				}
 			}
@@ -149,30 +209,13 @@ public class TelaCadastroProduto extends JFrame {
 		lblFoto.setOpaque(true);
 		lblFoto.setBounds(397, 11, 363, 210);
 		contentPane.add(lblFoto);
-		
+
 		JLabel lblCod = new JLabel("COD:");
 		lblCod.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		lblCod.setBounds(10, 106, 46, 14);
 		contentPane.add(lblCod);
+
 		
-		tfCod = new JTextField();
-		tfCod.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent event) {
-				if(event.getKeyCode() == 10 && tfCod.getText().length() >0 ){
-					tfNome.setEditable(true);
-					tfQuantEstoque.setEditable(true);
-					cbCategoria.setEnabled(true);
-					ftfPreco.setEditable(true);
-					btnAdicionarFoto.setEnabled(true);
-					btnCadastrar.setEnabled(true);
-					
-				}
-			}
-		});
-		tfCod.setBounds(150, 100, 209, 30);
-		contentPane.add(tfCod);
-		tfCod.setColumns(10);
 
 		try {
 			UIManager
@@ -187,6 +230,41 @@ public class TelaCadastroProduto extends JFrame {
 			} catch (Exception erro) {
 				JOptionPane.showMessageDialog(null, "Erro ao mudat look");
 			}
+		}
+	}
+
+	public void attCategoria() {
+		
+		cbCategoria.removeAll();
+
+		conexao.executarSQL("select * from categoria");
+
+		try {
+
+			conexao.resultSet.first();
+			do {
+
+				cbCategoria.addItem(conexao.resultSet.getString("nome"));
+
+			} while (conexao.resultSet.next());
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+		}
+
+	}
+	
+	public int getCodCategoria(String categoria){
+		
+		conexao.executarSQL("select * from categoria where nome = '"+categoria+"'");
+		
+		try {
+			conexao.resultSet.first();
+			return Integer.parseInt(conexao.resultSet.getString("id"));
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return -1;
 		}
 	}
 }

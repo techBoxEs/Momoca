@@ -83,7 +83,7 @@ public class TelaLogin extends JFrame {
 		tfId.setColumns(10);
 		
 		JButton btnLogin = new JButton("Login");
-		btnLogin.setIcon(new ImageIcon("C:\\Users\\aluno\\Desktop\\LoginIcon.png"));
+		btnLogin.setIcon(new ImageIcon("Imagens/LoginIcon.png"));
 		btnLogin.setBounds(20, 206, 109, 23);
 		panel.add(btnLogin);
 		
@@ -92,12 +92,12 @@ public class TelaLogin extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 			}
 		});
-		btnCancelar.setIcon(new ImageIcon("C:\\Users\\aluno\\Desktop\\cancelar.png"));
+		btnCancelar.setIcon(new ImageIcon("Imagens/cancelar.png"));
 		btnCancelar.setBounds(149, 206, 109, 23);
 		panel.add(btnCancelar);
 		
 		JLabel lblNewLabel = new JLabel("");
-		lblNewLabel.setIcon(new ImageIcon("C:\\Users\\aluno\\Desktop\\logoLogin.png"));
+		lblNewLabel.setIcon(new ImageIcon("Imagens/logoLogin.png"));
 		lblNewLabel.setBounds(0, 0, 284, 88);
 		panel.add(lblNewLabel);
 		
