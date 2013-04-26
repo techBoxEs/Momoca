@@ -10,10 +10,11 @@ import javax.swing.JOptionPane;
 
 public class Conexao {
 
-	 String driver = "org.postgresql.Driver";
-     String url = "jdbc:postgresql://localhost:5432/Banco_Cadastros";
-	final private String usuario = "postgres";
-	final private String senha = "rodrigo";
+	private String dataBase = "Momoca";
+	private String driver = "org.postgresql.Driver";
+	private String url = "jdbc:postgresql://localhost:5432/" + dataBase;
+	private String usuario = "postgres";
+	private String senha = "senacrs";
 	private Connection conexao;
 	public Statement statement;
 	public ResultSet resultSet;
@@ -26,7 +27,7 @@ public class Conexao {
 
 			Class.forName(driver);
 			conexao = DriverManager.getConnection(url, usuario, senha);
-		
+
 		} catch (ClassNotFoundException driver) {
 			JOptionPane.showMessageDialog(null, "Drive não localizado: "
 					+ driver);

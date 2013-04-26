@@ -8,7 +8,6 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.text.DecimalFormat;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -31,6 +30,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
+import ultilitarios.Conexao;
+
 public class TelaVenda extends JFrame {
 
 	private JPanel contentPane;
@@ -46,6 +47,7 @@ public class TelaVenda extends JFrame {
 	private JPopupMenu popupMenu;
 	private JMenuItem mntmRemover;
 	private double total;
+	private Conexao conexao;
 
 	/**
 	 * Launch the application.
@@ -68,12 +70,12 @@ public class TelaVenda extends JFrame {
 	 * Create the frame.
 	 */
 	public TelaVenda() {
-		addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				System.out.println("" + e.getKeyCode());
-			}
-		});
+
+		conexao = new Conexao();
+		conexao.conecta();
+		
+		conexao.executarSQL("select * from produto");
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1090, 715);
 		contentPane = new JPanel();
@@ -484,6 +486,11 @@ public class TelaVenda extends JFrame {
 		}
 
 		tfTotal.setText(String.format((total + ""),"%.2f").replace('.',','));
+	}
+	
+	public void atualizarCampos(){
+		
+		
 	}
 
 	private static void addPopup(Component component, final JPopupMenu popup) {
