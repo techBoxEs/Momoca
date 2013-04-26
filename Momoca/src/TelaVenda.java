@@ -45,6 +45,7 @@ public class TelaVenda extends JFrame {
 	private JScrollPane scrollPane;
 	private JPopupMenu popupMenu;
 	private JMenuItem mntmRemover;
+	private double total;
 
 	/**
 	 * Launch the application.
@@ -105,6 +106,7 @@ public class TelaVenda extends JFrame {
 
 		tfCodigo = new JTextField();
 		tfCodigo.addKeyListener(new KeyAdapter() {
+
 			@Override
 			public void keyPressed(KeyEvent e) {
 				System.out.println(e.getKeyCode());
@@ -113,11 +115,13 @@ public class TelaVenda extends JFrame {
 					tfQuantidade.requestFocus();
 					tfQuantidade.selectAll();
 				} else if (e.getKeyCode() == 10) {
+
 					model = (DefaultTableModel) tbLista.getModel();
 					model.addRow(new Object[] { 1, tfDescricao.getText(),
 							tfValorUni.getText(), tfQuantidade.getText(),
-							verificarTotal() });
+							verificarSubTotal() });
 					atualizarNumeros();
+					atualizarTotal();
 				} else if (e.getKeyCode() == 40) {
 
 				}
@@ -172,13 +176,8 @@ public class TelaVenda extends JFrame {
 
 		tbLista = new JTable();
 
-		tbLista.setModel(new DefaultTableModel(
-			new Object[][] {
-			},
-			new String[] {
-				"Item", "Descri\u00E7\u00E3o", "Valor", "Qn", "Total"
-			}
-		));
+		tbLista.setModel(new DefaultTableModel(new Object[][] {}, new String[] {
+				"Item", "Descri\u00E7\u00E3o", "Valor", "Qn", "Total" }));
 		tbLista.getColumnModel().getColumn(0).setPreferredWidth(56);
 		tbLista.getColumnModel().getColumn(1).setPreferredWidth(359);
 		tbLista.getColumnModel().getColumn(3).setPreferredWidth(45);
@@ -190,11 +189,13 @@ public class TelaVenda extends JFrame {
 		mntmRemover = new JMenuItem("Remover");
 		mntmRemover.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				try{
-				model.removeRow(tbLista.getSelectedRow());}
-				catch(Exception erro){
+				try {
+					model.removeRow(tbLista.getSelectedRow());
+				} catch (Exception erro) {
 					JOptionPane.showMessageDialog(null, "Selecione uma linha.");
 				}
+
+				atualizarTotal();
 			}
 		});
 		popupMenu.add(mntmRemover);
@@ -460,19 +461,29 @@ public class TelaVenda extends JFrame {
 
 	}
 
-	public String verificarTotal() {
+	public String verificarSubTotal() {
 
-		DecimalFormat format = new DecimalFormat("#.##");
 		int quant = Integer.parseInt(tfQuantidade.getText());
 		double valor = Double.parseDouble(tfValorUni.getText());
+		double total = (quant * valor);
 
-		return format.format(quant * valor);
+		return String.format("%.2f", total);
 	}
-	
-	public void atualizarTotal(){
-		for(int i =0;i<tbLista.getRowCount();i++){
-			
+
+	public void atualizarTotal() {
+
+		total = 0;
+		double subTotal = 0;
+		for (int i = 0; i < tbLista.getRowCount(); i++) {
+
+			subTotal = Double
+					.parseDouble(tbLista.getValueAt(i, 4).toString().replace(',', '.'));
+
+			total += subTotal;
+
 		}
+
+		tfTotal.setText(String.format((total + ""),"%.2f").replace('.',','));
 	}
 
 	private static void addPopup(Component component, final JPopupMenu popup) {
@@ -494,4 +505,5 @@ public class TelaVenda extends JFrame {
 			}
 		});
 	}
+
 }
