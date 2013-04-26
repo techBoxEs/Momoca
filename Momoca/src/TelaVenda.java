@@ -8,6 +8,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.SQLException;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -73,9 +74,9 @@ public class TelaVenda extends JFrame {
 
 		conexao = new Conexao();
 		conexao.conecta();
-		
+
 		conexao.executarSQL("select * from produto");
-		
+
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1090, 715);
 		contentPane = new JPanel();
@@ -91,7 +92,6 @@ public class TelaVenda extends JFrame {
 		tfTotal.setHorizontalAlignment(SwingConstants.RIGHT);
 		tfTotal.setEditable(false);
 		tfTotal.setFont(new Font("Verdana", Font.PLAIN, 35));
-		tfTotal.setText("135,54");
 		tfTotal.setColumns(10);
 
 		JLabel lblProduto = new JLabel("Valor Unit\u00E1rio R$");
@@ -99,7 +99,6 @@ public class TelaVenda extends JFrame {
 
 		tfDescricao = new JTextPane();
 		tfDescricao.setEditable(false);
-		tfDescricao.setText("FARINHA DE MANDIOCA - GRANFINO - 500GR");
 		tfDescricao.setFont(new Font("Verdana", Font.PLAIN, 20));
 
 		JLabel lblPreoUnitrio = new JLabel("Qnt");
@@ -111,19 +110,23 @@ public class TelaVenda extends JFrame {
 
 			@Override
 			public void keyPressed(KeyEvent e) {
-				System.out.println(e.getKeyCode());
+
 				if (e.getKeyCode() == 113) {
 					tfQuantidade.setEditable(true);
 					tfQuantidade.requestFocus();
 					tfQuantidade.selectAll();
 				} else if (e.getKeyCode() == 10) {
 
+					atualizarCampos();
 					model = (DefaultTableModel) tbLista.getModel();
 					model.addRow(new Object[] { 1, tfDescricao.getText(),
 							tfValorUni.getText(), tfQuantidade.getText(),
 							verificarSubTotal() });
 					atualizarNumeros();
 					atualizarTotal();
+					tfQuantidade.setText("1");
+					tfCodigo.setText("");
+
 				} else if (e.getKeyCode() == 40) {
 
 				}
@@ -131,7 +134,6 @@ public class TelaVenda extends JFrame {
 			}
 		});
 		tfCodigo.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		tfCodigo.setText("0123456789123");
 		tfCodigo.setHorizontalAlignment(SwingConstants.RIGHT);
 		tfCodigo.setColumns(10);
 
@@ -158,7 +160,7 @@ public class TelaVenda extends JFrame {
 		});
 
 		tfQuantidade.setEditable(false);
-		tfQuantidade.setText("5");
+		tfQuantidade.setText("1");
 		tfQuantidade.setHorizontalAlignment(SwingConstants.RIGHT);
 		tfQuantidade.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		tfQuantidade.setColumns(10);
@@ -171,7 +173,6 @@ public class TelaVenda extends JFrame {
 		tfValorUni.setEditable(false);
 		tfValorUni.setFont(new Font("Verdana", Font.PLAIN, 20));
 		tfValorUni.setHorizontalAlignment(SwingConstants.RIGHT);
-		tfValorUni.setText("5.99");
 		tfValorUni.setColumns(10);
 
 		scrollPane = new JScrollPane();
@@ -216,7 +217,8 @@ public class TelaVenda extends JFrame {
 		panel.add(lblF2);
 
 		JLabel label = new JLabel("");
-		label.setIcon(new ImageIcon("Imagens/logoTelaVenda.png"));
+		label.setVerticalAlignment(SwingConstants.TOP);
+		label.setIcon(new ImageIcon("Imagens/logoLogin.png"));
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane
 				.setHorizontalGroup(gl_contentPane
@@ -330,15 +332,15 @@ public class TelaVenda extends JFrame {
 										.addContainerGap()));
 		gl_contentPane
 				.setVerticalGroup(gl_contentPane
-						.createParallelGroup(Alignment.TRAILING)
+						.createParallelGroup(Alignment.LEADING)
 						.addGroup(
-								Alignment.LEADING,
 								gl_contentPane
 										.createSequentialGroup()
 										.addComponent(label,
-												GroupLayout.PREFERRED_SIZE, 80,
+												GroupLayout.PREFERRED_SIZE, 83,
 												GroupLayout.PREFERRED_SIZE)
-										.addGap(9)
+										.addPreferredGap(
+												ComponentPlacement.RELATED)
 										.addGroup(
 												gl_contentPane
 														.createParallelGroup(
@@ -421,7 +423,7 @@ public class TelaVenda extends JFrame {
 																		.addComponent(
 																				scrollPane,
 																				GroupLayout.DEFAULT_SIZE,
-																				488,
+																				509,
 																				Short.MAX_VALUE)
 																		.addGap(11)
 																		.addGroup(
@@ -466,7 +468,8 @@ public class TelaVenda extends JFrame {
 	public String verificarSubTotal() {
 
 		int quant = Integer.parseInt(tfQuantidade.getText());
-		double valor = Double.parseDouble(tfValorUni.getText());
+		double valor = Double.parseDouble(tfValorUni.getText()
+				.replace(',', '.'));
 		double total = (quant * valor);
 
 		return String.format("%.2f", total);
@@ -478,19 +481,33 @@ public class TelaVenda extends JFrame {
 		double subTotal = 0;
 		for (int i = 0; i < tbLista.getRowCount(); i++) {
 
-			subTotal = Double
-					.parseDouble(tbLista.getValueAt(i, 4).toString().replace(',', '.'));
+			subTotal = Double.parseDouble(tbLista.getValueAt(i, 4).toString()
+					.replace(',', '.'));
 
 			total += subTotal;
 
 		}
-
-		tfTotal.setText(String.format((total + ""),"%.2f").replace('.',','));
+		tfTotal.setText(String.format("%.2f", total));
+		//total = Math.round(total*100)/100;
+		
+		//tfTotal.setText((total + "").replace('.', ','));
 	}
-	
-	public void atualizarCampos(){
-		
-		
+
+	public void atualizarCampos() {
+
+		conexao.executarSQL("select * from produto where id = '"
+				+ tfCodigo.getText() + "'");
+
+		try {
+			conexao.resultSet.first();
+			tfDescricao.setText(conexao.resultSet.getString("descricao"));
+			tfValorUni.setText(conexao.resultSet.getString("preco").replace(
+					'.', ','));
+		} catch (SQLException e) {
+
+			JOptionPane.showMessageDialog(null, "Erro ao verificar codigo");
+		}
+
 	}
 
 	private static void addPopup(Component component, final JPopupMenu popup) {
