@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
@@ -33,7 +34,7 @@ public class TelaCadastroProduto extends JFrame {
 	private Imagem imagem = new Imagem();
 	JLabel lblFoto;
 	private JTextField tfCod;
-	JComboBox cbCategoria;
+	JComboBox<String> cbCategoria;
 	JFormattedTextField ftfPreco;
 	JButton btnCadastrar;
 	JButton btnAdicionarFoto;
@@ -63,7 +64,6 @@ public class TelaCadastroProduto extends JFrame {
 		conexao.conecta();
 		conexao.executarSQL("select * from categoria");
 		conexao.executarSQL("select * from produto");
-		
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 786, 393);
@@ -91,7 +91,7 @@ public class TelaCadastroProduto extends JFrame {
 		lblPreco.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		lblPreco.setBounds(10, 266, 46, 14);
 		contentPane.add(lblPreco);
-		
+
 		tfCod = new JTextField();
 		tfCod.addKeyListener(new KeyAdapter() {
 			@Override
@@ -119,16 +119,19 @@ public class TelaCadastroProduto extends JFrame {
 
 		cbCategoria = new JComboBox();
 		cbCategoria.addActionListener(new ActionListener() {
+			
 			public void actionPerformed(ActionEvent arg0) {
+				
 				if (cbCategoria.getSelectedIndex() == 0) {
 					String novaCategoria = JOptionPane
 							.showInputDialog("Digite a nova categoria: ");
 					try {
 						conexao.statement
-								.executeUpdate("insert into categoria(nome) values('"
+								.executeUpdate("insert into categoria values("+verificarCodCat()+",'"
 										+ novaCategoria + "')");
-						
-						attCategoria();
+
+						cbCategoria.removeAllItems();
+						attCategoria(novaCategoria);
 					} catch (SQLException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -145,8 +148,8 @@ public class TelaCadastroProduto extends JFrame {
 		cbCategoria.setBounds(150, 184, 167, 30);
 		contentPane.add(cbCategoria);
 
-		attCategoria();
-		
+		attCategoria(null);
+
 		tfQuantEstoque = new JTextField();
 		tfQuantEstoque.setEditable(false);
 		tfQuantEstoque.setBounds(150, 224, 62, 30);
@@ -172,14 +175,24 @@ public class TelaCadastroProduto extends JFrame {
 		btnCadastrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					//System.out.println("insert into produto values(" +	"'"+tfCod.getText()+",'"+tfDescricao.getText()+"',"+getCodCategoria(cbCategoria.getSelectedItem().toString())+",'"+tfQuantEstoque.getText()+"','"+ftfPreco.getText()+"')");
-					conexao.statement.executeUpdate("insert into produto values(" +
-							"'"+tfCod.getText()+"','"+tfDescricao.getText()+"',"+getCodCategoria(cbCategoria.getSelectedItem().toString())+","+tfQuantEstoque.getText()+","+ftfPreco.getText()+")");
+					// System.out.println("insert into produto values(" +
+					// "'"+tfCod.getText()+",'"+tfDescricao.getText()+"',"+getCodCategoria(cbCategoria.getSelectedItem().toString())+",'"+tfQuantEstoque.getText()+"','"+ftfPreco.getText()+"')");
+					conexao.statement
+							.executeUpdate("insert into produto values("
+									+ "'"
+									+ tfCod.getText()
+									+ "','"
+									+ tfDescricao.getText()
+									+ "',"
+									+ getCodCategoria(cbCategoria
+											.getSelectedItem().toString())
+									+ "," + tfQuantEstoque.getText() + ","
+									+ getPreco() + ")");
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				//descricao,categoria,estoque,preco
+				// descricao,categoria,estoque,preco
 			}
 		});
 		btnCadastrar.setEnabled(false);
@@ -215,8 +228,6 @@ public class TelaCadastroProduto extends JFrame {
 		lblCod.setBounds(10, 106, 46, 14);
 		contentPane.add(lblCod);
 
-		
-
 		try {
 			UIManager
 					.setLookAndFeel("de.javasoft.plaf.synthetica.SyntheticaBlueLightLookAndFeel");
@@ -233,9 +244,10 @@ public class TelaCadastroProduto extends JFrame {
 		}
 	}
 
-	public void attCategoria() {
+	public void attCategoria(String categoria) {
+
 		
-		cbCategoria.removeAll();
+	cbCategoria.addItem("<Adicionar nova categoria>");
 
 		conexao.executarSQL("select * from categoria");
 
@@ -247,17 +259,45 @@ public class TelaCadastroProduto extends JFrame {
 				cbCategoria.addItem(conexao.resultSet.getString("nome"));
 
 			} while (conexao.resultSet.next());
+			
+			if(categoria!=null)
+			cbCategoria.setSelectedItem(categoria);
 		} catch (SQLException e) {
 
-			e.printStackTrace();
+			System.out.println("tabela vazia");
 		}
 
 	}
+
+	public double getPreco() {
+		double valor = Double.parseDouble(ftfPreco.getText().replace(',', '.'));
+
+		DecimalFormat format = new DecimalFormat("0.00");
+		format.format(valor);
+
+		return valor;
+	}
 	
-	public int getCodCategoria(String categoria){
+	public int verificarCodCat(){
 		
-		conexao.executarSQL("select * from categoria where nome = '"+categoria+"'");
+		conexao.executarSQL("select * from categoria order by cod");
 		
+		try {
+			conexao.resultSet.last();
+			return 1+Integer.parseInt(conexao.resultSet.getString("cod"));
+			
+			
+		} catch (SQLException e) {
+			return 1;
+			
+		}
+	}
+
+	public int getCodCategoria(String categoria) {
+
+		conexao.executarSQL("select * from categoria where nome = '"
+				+ categoria + "'");
+
 		try {
 			conexao.resultSet.first();
 			return Integer.parseInt(conexao.resultSet.getString("id"));
