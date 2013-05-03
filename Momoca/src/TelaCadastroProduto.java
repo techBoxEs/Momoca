@@ -175,6 +175,7 @@ public class TelaCadastroProduto extends JFrame {
 		btnCadastrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
+					JOptionPane.showMessageDialog(null, "Produto cadastrado.");
 					// System.out.println("insert into produto values(" +
 					// "'"+tfCod.getText()+",'"+tfDescricao.getText()+"',"+getCodCategoria(cbCategoria.getSelectedItem().toString())+",'"+tfQuantEstoque.getText()+"','"+ftfPreco.getText()+"')");
 					conexao.statement
@@ -188,6 +189,8 @@ public class TelaCadastroProduto extends JFrame {
 											.getSelectedItem().toString())
 									+ "," + tfQuantEstoque.getText() + ","
 									+ getPreco() + ")");
+					
+					
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
