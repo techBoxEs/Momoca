@@ -120,16 +120,15 @@ public class TelaCadastroProduto extends JFrame {
 
 		cbCategoria = new JComboBox();
 		cbCategoria.addActionListener(new ActionListener() {
-			
+
 			public void actionPerformed(ActionEvent arg0) {
-				
+
 				if (cbCategoria.getSelectedIndex() == 0) {
 					String novaCategoria = JOptionPane
 							.showInputDialog("Digite a nova categoria: ");
 					try {
 						conexao.statement
-								.executeUpdate("insert into categoria values("+verificarCodCat()+",'"
-										+ novaCategoria + "')");
+								.executeUpdate("insert into categoria values("+verificarCodCat()+",'"+ novaCategoria + "')");
 
 						cbCategoria.removeAllItems();
 						attCategoria(novaCategoria);
@@ -186,13 +185,11 @@ public class TelaCadastroProduto extends JFrame {
 									+ "','"
 									+ tfDescricao.getText()
 									+ "',"
-									+ cbCategoria .getSelectedItem()
-											
-											
+									+ getCodCategoria(cbCategoria.getSelectedItem().toString())
 									+ "," + tfQuantEstoque.getText() + ","
 									+ getPreco() + ")");
-					
-					
+
+
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -251,7 +248,7 @@ public class TelaCadastroProduto extends JFrame {
 
 	public void attCategoria(String categoria) {
 
-		
+
 	cbCategoria.addItem("<Adicionar nova categoria>");
 
 		conexao.executarSQL("select * from categoria");
@@ -264,7 +261,7 @@ public class TelaCadastroProduto extends JFrame {
 				cbCategoria.addItem(conexao.resultSet.getString("nome"));
 
 			} while (conexao.resultSet.next());
-			
+
 			if(categoria!=null)
 			cbCategoria.setSelectedItem(categoria);
 		} catch (SQLException e) {
@@ -282,30 +279,29 @@ public class TelaCadastroProduto extends JFrame {
 
 		return valor;
 	}
-	
+
 	public int verificarCodCat(){
-		
+
 		conexao.executarSQL("select * from categoria order by cod");
-		
+
 		try {
 			conexao.resultSet.last();
 			return 1+Integer.parseInt(conexao.resultSet.getString("cod"));
-			
-			
+
+
 		} catch (SQLException e) {
 			return 1;
-			
+
 		}
 	}
 
 	public int getCodCategoria(String categoria) {
 
-		conexao.executarSQL("select * from categoria where nome = '"
-				+ categoria + "'");
+		conexao.executarSQL("select * from categoria where nome like '"+ categoria + "'");
 
 		try {
 			conexao.resultSet.first();
-			return Integer.parseInt(conexao.resultSet.getString("id"));
+			return Integer.parseInt(conexao.resultSet.getString("cod"));
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
