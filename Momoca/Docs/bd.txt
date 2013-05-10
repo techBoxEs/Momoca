@@ -1,0 +1,15 @@
+create table usuario(
+id serial primary key,
+nome name,
+cargo text,
+senha varchar(24)
+);
+
+
+create table produto(
+id text primary key,
+descricao text,
+categoria text,
+quantEstoque integer,
+preco decimal(7,2)
+);
