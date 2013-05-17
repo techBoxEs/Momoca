@@ -14,7 +14,7 @@ public class Conexao {
 	private String driver = "org.postgresql.Driver";
 	private String url = "jdbc:postgresql://localhost:5432/" + dataBase;
 	private String usuario = "postgres";
-	private String senha = "postgres";
+	private String senha = "senacrs";
 	private Connection conexao;
 	public Statement statement;
 	public ResultSet resultSet;
@@ -29,12 +29,12 @@ public class Conexao {
 			conexao = DriverManager.getConnection(url, usuario, senha);
 
 		} catch (ClassNotFoundException driver) {
-			JOptionPane.showMessageDialog(null, "Drive n„o localizado: "
+			JOptionPane.showMessageDialog(null, "Driver n√£o localizado: "
 					+ driver);
 			resultado = false;
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(null,
-					"Deu erro na conex„o com a fonte de dados: " + e);
+					"Erro na conex√£o com a fonte de dados: " + e);
 			resultado = false;
 		}
 
@@ -50,7 +50,7 @@ public class Conexao {
 			JOptionPane.showMessageDialog(null, "Banco fechado");
 		} catch (SQLException erro) {
 			JOptionPane.showMessageDialog(null,
-					"N„o foi possivel fechar o banco de dados: " + erro);
+					"N√£o foi possivel fechar o banco de dados: " + erro);
 			resultado = false;
 		}
 	}
@@ -64,7 +64,7 @@ public class Conexao {
 
 		} catch (SQLException sqlex) {
 			JOptionPane.showMessageDialog(null,
-					"N„o foi possivel executar o comando SQL: " + sqlex
+					"N√£o foi possivel executar o comando SQL: " + sqlex
 							+ ", o sql passado foi " + sql);
 		}
 	}
